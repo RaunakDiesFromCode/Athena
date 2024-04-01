@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer shape with gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp" />
+            <gradient
+                android:angle="45"
+                android:startColor="@color/violet"
+                android:centerColor="@color/purple"
+                android:endColor="@color/blue3"/>
+        </shape>
+    </item>
+    <!-- Inner shape with solid white color -->
+    <item
+        android:left="10dp"
+        android:top="10dp"
+        android:right="10dp"
+        android:bottom="10dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993731553923",
+    "project_id": "athena-login-6ad52",
+    "storage_bucket": "athena-login-6ad52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993731553923:android:172765b348e8538de349b6",
+        "android_client_info": {
+          "package_name": "com.example.athena"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlbIPc7a6EicUjHmg5ApmzMVHdyVseGM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

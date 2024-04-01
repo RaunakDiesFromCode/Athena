@@ -1,0 +1,10 @@
+<!-- home_search_book.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background book icon -->
+    <item android:drawable="@drawable/icon"
+        android:gravity="center"
+        android:height="50dp"
+        android:width="50dp" />
+
+</layer-list>
