@@ -140,8 +140,10 @@ public class SearchPage extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 // Whenever the text changes, hide recent searches layout
                 LinearLayout recentSearchesLayout = findViewById(R.id.searchResultsLayout);
-                searchResultsScrollView.setVisibility(View.GONE);
+                searchResultsScrollView.setVisibility(View.GONE); 
                 recentSearchesLayout.setVisibility(View.VISIBLE);
+                TextView noResultsTextView = findViewById(R.id.noResFound);
+                noResultsTextView.setVisibility(View.GONE);
             }
         });
 
@@ -237,6 +239,8 @@ public class SearchPage extends AppCompatActivity {
 
                     // Update recent searches
                     updateRecentSearches(currentSearchTerm); // Call updateRecentSearches here
+                    TextView noResultsTextView = findViewById(R.id.noResFound);
+                    noResultsTextView.setVisibility(View.GONE);
                 }
             }
         });
@@ -261,6 +265,8 @@ public class SearchPage extends AppCompatActivity {
 
     // Update recent searches list and SharedPreferences
     private void updateRecentSearches(String searchTerm) {
+        TextView noResultsTextView = findViewById(R.id.noResFound);
+        noResultsTextView.setVisibility(View.GONE);
         if (!recentSearches.contains(searchTerm.toLowerCase())) {
             // Remove the oldest search term if the list has reached its maximum size
             if (recentSearches.size() == 3) {
@@ -280,6 +286,8 @@ public class SearchPage extends AppCompatActivity {
     private void updateRecentSearchButtons() {
         // Clear existing recent search buttons
         clearRecentSearchButtons();
+        TextView noResultsTextView = findViewById(R.id.noResFound);
+        noResultsTextView.setVisibility(View.GONE);
 
         // Update the text of the recent search buttons based on the recentSearches list
         for (int i = 0; i < recentSearches.size(); i++) {
@@ -311,6 +319,8 @@ public class SearchPage extends AppCompatActivity {
             Button button = findViewById(buttonId);
             button.setText("");
             button.setVisibility(View.GONE);
+            TextView noResultsTextView = findViewById(R.id.noResFound);
+            noResultsTextView.setVisibility(View.GONE);
         }
     }
 
@@ -334,15 +344,23 @@ public class SearchPage extends AppCompatActivity {
                 for (DataSnapshot pdfSnapshot : dataSnapshot.getChildren()) {
                     String pdfTitle = pdfSnapshot.child("pdfTitle").getValue(String.class);
                     String pdfTags = pdfSnapshot.child("pdfTags").getValue(String.class);
+                    Boolean verified = pdfSnapshot.child("verified").getValue(Boolean.class);
 
                     // Check if the PDF tags contain the searched tag
-                    if (pdfTags != null && pdfTags.toLowerCase().contains(wrd)) {
+                    if (pdfTags != null && pdfTags.toLowerCase().contains(wrd) && Boolean.TRUE.equals(verified)) {
                         searchResults.add(pdfTitle);
                     }
                 }
 
                 // Once all search results are fetched, populate the UI with them
-                displaySearchResults(searchResults);
+                if (searchResults.isEmpty()) {
+                    // If no results found, unhide the TextView
+                    TextView noResultsTextView = findViewById(R.id.noResFound);
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    // If results found, display them
+                    displaySearchResults(searchResults);
+                }
                 progressBar.setVisibility(View.GONE);
                 btngrp.setVisibility(View.VISIBLE);
             }

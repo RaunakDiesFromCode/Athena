@@ -75,10 +75,11 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_marginTop="150dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/violet"/>
 
 
 

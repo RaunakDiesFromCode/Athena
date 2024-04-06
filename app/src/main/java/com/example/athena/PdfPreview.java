@@ -118,8 +118,12 @@ public class PdfPreview extends AppCompatActivity {
         // Set text for TextViews
         TextView pdfNameTextView = findViewById(R.id.pdfNameTextView);
         TextView pdfTagsTextView = findViewById(R.id.pdfTagsTextView);
+        TextView uploader = findViewById(R.id.uploader);
         pdfNameTextView.setText(pdfTitle);
         pdfTagsTextView.setText("Tags: " + tags);
+        pdfTagsTextView.setVisibility(View.GONE);
+        uploader.setVisibility(View.GONE);
+//        pdfNameTextView.setVisibility(View.GONE);
 
         // Parse URL
         Uri uri = Uri.parse(URL);

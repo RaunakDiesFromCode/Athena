@@ -28,8 +28,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="40dp"
                 android:text="Name:"
-                android:textSize="30sp"
-                android:fontFamily="@font/futura"/>
+                android:textSize="20sp"
+                android:fontFamily="@font/futura"
+                android:singleLine="true"/>
 
 
 
@@ -40,9 +41,20 @@
                 android:layout_below="@id/pdfNameTextView"
                 android:layout_margin="10dp"
                 android:text="Tags:"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:fontFamily="@font/futura"
-                android:visibility="gone"/>
+                android:singleLine="true"/>
+
+            <TextView
+                android:id="@+id/uploader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pdfTagsTextView"
+                android:layout_margin="10dp"
+                android:text="Uploader:"
+                android:textSize="20sp"
+                android:fontFamily="@font/futura"
+                android:singleLine="true"/>
         </RelativeLayout>
 
 
@@ -52,7 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:indeterminateTint="@color/violet"/>
 
         <!-- PDF preview -->
         <androidx.viewpager.widget.ViewPager
