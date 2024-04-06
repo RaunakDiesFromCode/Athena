@@ -2,7 +2,6 @@
 ![Logo](https://firebasestorage.googleapis.com/v0/b/athena-login-6ad52.appspot.com/o/Images%2Flogo.png?alt=media&token=92615d38-6478-4cc2-8478-103b551b718a)
 
 
-# Athena
 
 An E-library to store all books, notes and different study materials provided and curated by students, and teachers free of cost. Study material will be sorted according to stream, topics, and languages. Every material will be in PDF format so that easy viewing and downloading is facilitated. The PDF which are readable can have read-aloud feature
 
