@@ -3,7 +3,7 @@
 
 
 
-###An E-library to store all books, notes and different study materials provided and curated by students, and teachers free of cost. Study material will be sorted according to stream, topics, and languages. Every material will be in PDF format so that easy viewing and downloading is facilitated. The PDF which are readable can have read-aloud feature
+## An E-library to store all books, notes and different study materials provided and curated by students, and teachers free of cost. Study material will be sorted according to stream, topics, and languages. Every material will be in PDF format so that easy viewing and downloading is facilitated.
 
 
 
@@ -34,9 +34,9 @@ At our e-library, we provide a comprehensive platform for accessing a vast array
 **Server:** Firebase
 
 
-## Optimizations
+## Working on,
 
-We are looking forward for more optimizations and fixes on the code so that clients can run the app easy and fast
+We are looking forward for more optimizations and fixes on the code so that clients can run the app easy and fast. We are looking forward to incorporate a Read-aloud Feature for those PDFs which are readable.
 
 
 
