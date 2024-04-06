@@ -3,7 +3,7 @@
 
 
 
-An E-library to store all books, notes and different study materials provided and curated by students, and teachers free of cost. Study material will be sorted according to stream, topics, and languages. Every material will be in PDF format so that easy viewing and downloading is facilitated. The PDF which are readable can have read-aloud feature
+###An E-library to store all books, notes and different study materials provided and curated by students, and teachers free of cost. Study material will be sorted according to stream, topics, and languages. Every material will be in PDF format so that easy viewing and downloading is facilitated. The PDF which are readable can have read-aloud feature
 
 
 
