@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,13 +19,17 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -156,9 +161,12 @@ public class New extends AppCompatActivity {
             // Get the user's emails
             userEmail = currentUser.getEmail();
         }
+        Log.d(null, "uploadData: uploader = "+userEmail);
         String uniqueKey = databaseReference.child("pdf").push().getKey();
 
         HashMap<String, Object> data = new HashMap<>();
+
+
 
         data.put("uploader", userEmail);
         data.put("pdfTitle", pdfName);
@@ -166,7 +174,9 @@ public class New extends AppCompatActivity {
         data.put("pdfUrl", downloadUrl);
         data.put("pdfTags", tags.getText().toString());
         data.put("verified", false);
-        data.put("saved", false);
+        data.put("saved", "");
+
+        Log.d(null, "uploadData: uploader: "+userEmail);
 
         databaseReference.child("pdf").child(uniqueKey).setValue(data)
                 .addOnSuccessListener(aVoid -> Toast.makeText(New.this, "Yay!! Your notes are uploaded", Toast.LENGTH_SHORT).show())
@@ -174,6 +184,58 @@ public class New extends AppCompatActivity {
         btSelect.setText("Click to Upload PDF");
         tags.setText("");
     }
+
+//    private void uploadData(String downloadUrl) {
+//        EditText tags = findViewById(R.id.tags);
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null) {
+//            // Get the user's email
+//            String userEmail = currentUser.getEmail();
+//            String uniqueKey = databaseReference.child("pdf").push().getKey();
+//
+//            // Retrieve the current value of "saved" from the database
+//            databaseReference.child("pdf").child(uniqueKey).child("saved").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    String currentSavedValue = dataSnapshot.getValue(String.class);
+//                    if (currentSavedValue == null) {
+//                        currentSavedValue = ""; // Initialize to empty string if it's null
+//                    }
+//
+//                    // Concatenate the new user's email with the existing value of "saved", separated by a space
+//                    String updatedSavedValue = currentSavedValue.isEmpty() ? userEmail : currentSavedValue + " " + userEmail;
+//
+//                    // Prepare data to be uploaded
+//                    HashMap<String, Object> data = new HashMap<>();
+//                    data.put("pdfTitle", pdfName);
+//                    data.put("pdfTitleFull", pdfNameFull);
+//                    data.put("pdfUrl", downloadUrl);
+//                    data.put("pdfTags", tags.getText().toString());
+//                    data.put("verified", false);
+//                    data.put("saved", updatedSavedValue);
+//
+//                    // Upload the data to the database
+//                    databaseReference.child("pdf").child(uniqueKey).setValue(data)
+//                            .addOnSuccessListener(aVoid -> {
+//                                Toast.makeText(New.this, "Yay!! Your notes are uploaded", Toast.LENGTH_SHORT).show();
+//                                btSelect.setText("Click to Upload PDF");
+//                                tags.setText("");
+//                            })
+//                            .addOnFailureListener(e -> Toast.makeText(New.this, "Failed to upload PDF", Toast.LENGTH_SHORT).show());
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    // Handle onCancelled
+//                }
+//            });
+//        } else {
+//            // Handle the case where currentUser is null
+//            Toast.makeText(New.this, "User not authenticated", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
 
     @SuppressLint("Range")
     private void openGallery() {

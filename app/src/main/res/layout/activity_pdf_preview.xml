@@ -7,72 +7,94 @@
     android:layout_height="match_parent"
     tools:context=".PdfPreview">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/pdfNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Name:"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/uploaderEmailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pdfNameTextView"
-            android:layout_margin="16dp"
-            android:text="Uploaded by:"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/pdfTagsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/uploaderEmailTextView"
-            android:layout_margin="16dp"
-            android:text="Tags:"
-            android:textSize="18sp" />
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/creds"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+<!--            android:background="@drawable/bg_view2"-->
+
+            <TextView
+                android:id="@+id/pdfNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
+                android:text="Name:"
+                android:textSize="30sp"
+                android:fontFamily="@font/futura"/>
+
+
+
+            <TextView
+                android:id="@+id/pdfTagsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pdfNameTextView"
+                android:layout_margin="10dp"
+                android:text="Tags:"
+                android:textSize="18sp"
+                android:fontFamily="@font/futura"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <!-- PDF preview -->
+        <androidx.viewpager.widget.ViewPager
+            android:layout_above="@id/quickBtn"
+            android:layout_below="@id/creds"
+            android:id="@+id/viewPager"
+            android:layout_width="wrap_content"
             android:layout_height="450dp"
-            android:layout_below="@id/pdfTagsTextView"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:backgroundTint="@color/blue1">
-            <com.github.barteksc.pdfviewer.PDFView
-                android:id="@+id/pdfView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            android:padding="5dp"/>
 
         <LinearLayout
+            android:id="@+id/quickBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
-            android:gravity="center">
+            android:layout_margin="0dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
             <Button
                 android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="0dp"
                 android:text="Save"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:padding="20dp"
+                android:background="@drawable/recent_box_inner"
+                android:fontFamily="@font/futura"/>
 
             <Button
-                android:id="@+id/downlaodButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/downloadButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="0dp"
                 android:text="Download"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:padding="20dp"
+                android:background="@drawable/recent_box_inner"
+                android:fontFamily="@font/futura"/>
         </LinearLayout>
-
 
     </RelativeLayout>
 

@@ -8,6 +8,7 @@
     tools:context=".Saved">
 
     <LinearLayout
+        android:id="@+id/top"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,23 +46,54 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top"
+        android:layout_above="@id/superButtonContainer"
+        android:fillViewport="true">
+
+        <!-- Linear layout for savedView -->
+        <LinearLayout
+            android:id="@+id/savedView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="15dp"
+            android:background="@drawable/recent_box_outer"
+            android:padding="20dp">
+
+            <!-- Static TextView for "Saved" -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Saved"
+                android:fontFamily="@font/futura"
+                android:textSize="30dp"
+                android:layout_margin="0dp" />
+
+            <!-- Dynamic Buttons will be added here -->
+        </LinearLayout>
+    </ScrollView>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:id="@+id/superButtonContainer">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/buttonContainer">
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/bg_view1">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/bg_view1"
+                android:orientation="horizontal"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
 
             <Button
                 android:id="@+id/new_item"

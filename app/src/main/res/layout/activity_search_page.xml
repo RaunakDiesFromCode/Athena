@@ -13,7 +13,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/logout"
         android:backgroundTint="@color/white"
@@ -43,6 +43,8 @@
             android:fontFamily="@font/futura"
             android:gravity="center_vertical"
             android:hint="Search for any topic"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:paddingStart="20dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
@@ -207,7 +209,7 @@
             android:fontFamily="@font/futura"
             android:text="@string/athena_banner"
             android:textColor="@color/purple"
-            android:textSize="100sp"
+            android:textSize="80dp"
             android:textStyle="bold" />
 
         <View

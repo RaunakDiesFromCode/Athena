@@ -3,6 +3,7 @@ package com.example.athena;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
@@ -13,8 +14,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,6 +46,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SearchPage extends AppCompatActivity {
 
@@ -52,10 +57,14 @@ public class SearchPage extends AppCompatActivity {
     FirebaseUser user;
 
     DatabaseReference databaseReference;
+    DatabaseReference recentSearchesRef;
     LinearLayout searchResultsLayout;
     ScrollView searchResultsScrollView;
     EditText searchWord;
     private String previousSearchTerm = "";
+
+    private ArrayList<String> recentSearches = new ArrayList<>(3); // Holds the last 3 search terms
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +78,45 @@ public class SearchPage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_search_page);
 
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+        // Load recent searches from SharedPreferences
+        loadRecentSearches();
+
+        // Update the UI to reflect recent searches
+        updateRecentSearchButtons();
+
+
         auth = FirebaseAuth.getInstance();
         logoutBtn = findViewById(R.id.logout);
         searchWord = findViewById(R.id.searchTxt);
         searchResultsScrollView = findViewById(R.id.searchResultsScrollView);
         databaseReference = FirebaseDatabase.getInstance().getReference("pdf");
+        recentSearchesRef = FirebaseDatabase.getInstance().getReference("recent_searches");
+
+
 
         Button newButton = findViewById(R.id.new_item);
         Button searchButton = findViewById(R.id.search);
         Button savedButton = findViewById(R.id.saved);
         Button searchTxtBtn = findViewById(R.id.uploadPdfBtn);
+
+        searchWord.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) { // Check for the search action
+                    // Perform search action here
+                    Button searchPDFButton = findViewById(R.id.uploadPdfBtn);
+                    searchPDFButton.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+
 
         View buttonContainer = findViewById(R.id.buttonContainer);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -163,16 +201,117 @@ public class SearchPage extends AppCompatActivity {
                 finish();
             }
         });
-        searchButton.setOnClickListener(new View.OnClickListener() {
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Start New.java activity
+//                Intent intent = new Intent(getApplicationContext(), SearchPage.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+
+        searchTxtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start New.java activity
-                Intent intent = new Intent(getApplicationContext(), SearchPage.class);
-                startActivity(intent);
-                finish();
+                ScrollView searchResultsScrollView = findViewById(R.id.searchResultsScrollView);
+                LinearLayout recentSearchesLayout = findViewById(R.id.searchResultsLayout);
+                ProgressBar progressBar = findViewById(R.id.progressBar);
+
+                String currentSearchTerm = searchWord.getText().toString().trim();
+
+                // Check if the search term is empty
+                if (currentSearchTerm.isEmpty()) {
+                    Toast.makeText(SearchPage.this, "Write something to search at least...", Toast.LENGTH_SHORT).show();
+                } else {
+                    LinearLayout btngrp = findViewById(R.id.searchResultsLayout);
+                    searchResultsScrollView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    btngrp.setVisibility(View.GONE);
+
+                    // Update previousSearchTerm
+                    previousSearchTerm = currentSearchTerm;
+
+                    // Populate search results
+                    populateSearchResults();
+
+                    // Update recent searches
+                    updateRecentSearches(currentSearchTerm); // Call updateRecentSearches here
+                }
             }
         });
 
+    }
+
+    // Load recent searches from SharedPreferences
+    // Load recent searches from SharedPreferences
+    private void loadRecentSearches() {
+        Set<String> savedSearches = sharedPreferences.getStringSet("recent_searches", null);
+        if (savedSearches != null) {
+            recentSearches.addAll(savedSearches);
+        }
+    }
+
+    // Save recent searches to SharedPreferences
+    private void saveRecentSearches() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet("recent_searches", new HashSet<>(recentSearches));
+        editor.apply();
+    }
+
+    // Update recent searches list and SharedPreferences
+    private void updateRecentSearches(String searchTerm) {
+        if (!recentSearches.contains(searchTerm.toLowerCase())) {
+            // Remove the oldest search term if the list has reached its maximum size
+            if (recentSearches.size() == 3) {
+                recentSearches.remove(0);
+            }
+            // Add the new search term
+            recentSearches.add(searchTerm);
+
+            // Save recent searches
+            saveRecentSearches();
+
+            // Update the UI to reflect recent searches
+            updateRecentSearchButtons();
+        }
+    }
+
+    private void updateRecentSearchButtons() {
+        // Clear existing recent search buttons
+        clearRecentSearchButtons();
+
+        // Update the text of the recent search buttons based on the recentSearches list
+        for (int i = 0; i < recentSearches.size(); i++) {
+            String searchTerm = recentSearches.get(i);
+            int buttonId = getResources().getIdentifier("recent_searches_" + (i + 1), "id", getPackageName());
+            Button button = findViewById(buttonId);
+            button.setText(searchTerm);
+            button.setVisibility(View.VISIBLE); // Ensure the button is visible
+
+            // Set OnClickListener for the button
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Set the button's text to the EditText view
+                    searchWord.setText(searchTerm);
+
+                    // Perform search action by programmatically clicking the search button
+                    Button searchPDFButton = findViewById(R.id.uploadPdfBtn);
+                    searchPDFButton.performClick();
+                }
+            });
+        }
+    }
+
+    private void clearRecentSearchButtons() {
+        // Clear text and hide all recent search buttons
+        for (int i = 0; i < 3; i++) {
+            int buttonId = getResources().getIdentifier("recent_searches_" + (i + 1), "id", getPackageName());
+            Button button = findViewById(buttonId);
+            button.setText("");
+            button.setVisibility(View.GONE);
+        }
     }
 
     private void populateSearchResults() {
@@ -180,7 +319,7 @@ public class SearchPage extends AppCompatActivity {
     }
 
     private void fetchSearchResultsFromFirebase() {
-        String wrd = searchWord.getText().toString().trim();
+        String wrd = searchWord.getText().toString().trim().toLowerCase();
         ProgressBar progressBar = findViewById(R.id.progressBar);
         LinearLayout btngrp = findViewById(R.id.searchResultsLayout);
         Log.d(null, "fetchSearchResultsFromFirebase: search term = " + wrd);
@@ -197,7 +336,7 @@ public class SearchPage extends AppCompatActivity {
                     String pdfTags = pdfSnapshot.child("pdfTags").getValue(String.class);
 
                     // Check if the PDF tags contain the searched tag
-                    if (pdfTags != null && pdfTags.contains(wrd)) {
+                    if (pdfTags != null && pdfTags.toLowerCase().contains(wrd)) {
                         searchResults.add(pdfTitle);
                     }
                 }
@@ -275,15 +414,24 @@ public class SearchPage extends AppCompatActivity {
                     databaseReference.orderByChild("pdfTitle").equalTo(pdfTitle).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String pdfTitleFull,saved, Tags = "", url = "";
                             // Iterate through the dataSnapshot to find the matching pdfTitle
                             for (DataSnapshot pdfSnapshot : dataSnapshot.getChildren()) {
                                 // Get the value of pdfTitleFull
-                                String pdfTitleFull = pdfSnapshot.child("pdfTitleFull").getValue(String.class);
+                                pdfTitleFull = pdfSnapshot.child("pdfTitleFull").getValue(String.class);
+                                saved = pdfSnapshot.child("saved").getValue(String.class);
+                                Tags = pdfSnapshot.child("pdfTags").getValue(String.class);
+                                url = pdfSnapshot.child("pdfUrl").getValue(String.class);
+                                String pdfId = pdfSnapshot.getKey();
 
                                 // Start PdfPreviewActivity and pass the PDF title and pdfTitleFull
                                 Intent intent = new Intent(SearchPage.this, PdfPreview.class);
                                 intent.putExtra("pdfTitle", pdfTitle);
                                 intent.putExtra("pdfTitleFull", pdfTitleFull);
+                                intent.putExtra("Tags", Tags);
+                                intent.putExtra("saved", saved);
+                                intent.putExtra("URL", url);
+                                intent.putExtra("ID", pdfId);
                                 startActivity(intent);
                             }
                         }
@@ -302,29 +450,6 @@ public class SearchPage extends AppCompatActivity {
         // Make the ScrollView containing search results visible
         ScrollView searchResultsScrollView = findViewById(R.id.searchResultsScrollView);
         searchResultsScrollView.setVisibility(View.VISIBLE);
-    }
-
-
-    private void downloadPDF(String fileName) {
-        Toast.makeText(SearchPage.this, "Download started...", Toast.LENGTH_SHORT).show();
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference pdfRef = storageRef.child("pdf/" + (fileName + ".pdf"));
-        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File localFile = new File(downloadsDir, fileName + ".pdf");
-        pdfRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(SearchPage.this, "File downloaded successfully", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Log the exception for debugging purposes
-                Log.e("DownloadError", "Failed to download file", exception);
-                // Handle any errors
-                Toast.makeText(SearchPage.this, "Failed to download file", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 
