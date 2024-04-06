@@ -1,5 +1,5 @@
 
-![Logo](https://firebasestorage.googleapis.com/v0/b/athena-login-6ad52.appspot.com/o/Images%2FScreenshot%202024-04-06%20at%2011.41.30%E2%80%AFPM.png?alt=media&token=b839ecdd-36e3-46d8-ab2a-be8a382c0f01)
+![Logo](https://firebasestorage.googleapis.com/v0/b/athena-login-6ad52.appspot.com/o/Images%2Flogo.png?alt=media&token=92615d38-6478-4cc2-8478-103b551b718a)
 
 
 # Athena
