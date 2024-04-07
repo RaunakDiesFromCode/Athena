@@ -24,7 +24,7 @@ At our e-library, we provide a comprehensive platform for accessing a vast array
 ![logo](https://firebasestorage.googleapis.com/v0/b/athena-login-6ad52.appspot.com/o/Images%2Fworking.png?alt=media&token=d193845d-302a-4f46-a4a6-b942282871e1)
 ## Installation
 
-[Install my app via APK](https://drive.google.com/file/d/1AgJKFw1PSdOYOjOR8PYfuLchsvWtvX1C/view?usp=sharing)
+Refer to Releases section for Instalation
 
     
 ## Tech Stack
