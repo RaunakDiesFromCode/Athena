@@ -64,8 +64,8 @@ public class AdminPdfPreview extends AppCompatActivity {
 
     private boolean isSaved = false;
 
-
     private Context context;
+    private File tempFile;
 
 
     @Override
@@ -130,6 +130,7 @@ public class AdminPdfPreview extends AppCompatActivity {
         // Download and render PDF
         downloadAndRenderPdf(uri);
         setupDownloadButton();
+
     }
 
 
@@ -279,6 +280,28 @@ public class AdminPdfPreview extends AppCompatActivity {
         }
         if (onCompleteReceiver != null) {
             unregisterReceiver(onCompleteReceiver);
+        }
+        cancelDownloadAndCleanup();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Cancel ongoing tasks and cleanup resources
+        cancelDownloadAndCleanup();
+        super.onBackPressed();
+    }
+
+    // Method to cancel ongoing tasks and cleanup resources
+    private void cancelDownloadAndCleanup() {
+        if (tempFile != null) {
+            // Delete the temporary PDF file if it exists
+            if (tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
+        // Close PdfRenderer if it is open
+        if (pdfRenderer != null) {
+            pdfRenderer.close();
         }
     }
 }
