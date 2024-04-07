@@ -185,13 +185,15 @@ public class AdminMainActivity extends AppCompatActivity {
                     ID = snapshot.getKey();
 
                     uploader = snapshot.child("uploader").getValue(String.class);
+                    Log.d(null, "onDataChange: uploader of searched pdf: " +uploader);
 
                     boolean verified = snapshot.child("verified").getValue(Boolean.class);
                     if (!verified) {
                         String pdfTitle = snapshot.child("pdfTitle").getValue(String.class);
                         String pdfKey = snapshot.getKey();
 
-                        createPdfButton(mainLayout, pdfTitle, pdfKey);
+//                        createPdfButton(mainLayout, pdfTitle, pdfKey);
+                        createPdfButton(mainLayout, pdfTitle, pdfKey, pdfTags, uploader);
                     }
                 }
             }
@@ -203,7 +205,67 @@ public class AdminMainActivity extends AppCompatActivity {
         });
     }
 
-    private void createPdfButton(LinearLayout mainLayout, String pdfTitle, String pdfKey) {
+//    private void createPdfButton(LinearLayout mainLayout, String pdfTitle, String pdfKey) {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//
+//        // Inflate the custom layout for the PDF item
+//        View dynamicLayout = inflater.inflate(R.layout.dynamic_linear_layout, mainLayout, false);
+//
+//        // Find the buttons in the custom layout
+//        Button nameButton = dynamicLayout.findViewById(R.id.nameButton);
+//        Button tickButton = dynamicLayout.findViewById(R.id.tickButton);
+//
+//        // Set PDF title to the name button
+//        nameButton.setText(pdfTitle);
+//
+//        // Set onClickListener for the name button (optional)
+//        nameButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Handle click event of the name button
+//                // For example, you can open the PDF or perform any other action
+//                Intent intent = new Intent(getApplicationContext(), AdminPdfPreview.class);
+//                Log.d(null, "onClick: pdf title = " + pdfTitle);
+//                Log.d(null, "onClick: pdf url = " + pdfUrl);
+//                intent.putExtra("pdfTitle", pdfTitle);
+//                intent.putExtra("URL", pdfUrl);
+//                intent.putExtra("ID", ID);
+//                intent.putExtra("pdfTitleFull", pdfTitleFull);
+//                intent.putExtra("uploader", uploader);
+//                intent.putExtra("pdfTags", pdfTags);
+//                startActivity(intent);
+//                Log.d(null, "onClick: PDf preview button clicked");
+//            }
+//        });
+//
+//        // Set onClickListener for the tick button
+//        tickButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Handle click event of the tick button
+//                // For example, you can mark the PDF as verified in the database
+////                markPdfAsVerified(pdfKey);
+//                Log.d(null, "onClick: PDf check button clicked");
+//                databaseReference.child(pdfKey).child("verified").addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        boolean currentStatus = dataSnapshot.getValue(Boolean.class);
+//                        databaseReference.child(pdfKey).child("verified").setValue(!currentStatus); // Toggle the value
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                        // Handle errors
+//                    }
+//                });
+//            }
+//        });
+//
+//        // Add the custom layout to the main layout
+//        mainLayout.addView(dynamicLayout);
+//    }
+
+    private void createPdfButton(LinearLayout mainLayout, String pdfTitle, String pdfKey, String pdfTags, String uploader) {
         LayoutInflater inflater = LayoutInflater.from(this);
 
         // Inflate the custom layout for the PDF item
@@ -223,8 +285,6 @@ public class AdminMainActivity extends AppCompatActivity {
                 // Handle click event of the name button
                 // For example, you can open the PDF or perform any other action
                 Intent intent = new Intent(getApplicationContext(), AdminPdfPreview.class);
-                Log.d(null, "onClick: pdf title = " + pdfTitle);
-                Log.d(null, "onClick: pdf url = " + pdfUrl);
                 intent.putExtra("pdfTitle", pdfTitle);
                 intent.putExtra("URL", pdfUrl);
                 intent.putExtra("ID", ID);
@@ -232,7 +292,6 @@ public class AdminMainActivity extends AppCompatActivity {
                 intent.putExtra("uploader", uploader);
                 intent.putExtra("pdfTags", pdfTags);
                 startActivity(intent);
-                Log.d(null, "onClick: PDf preview button clicked");
             }
         });
 
@@ -242,8 +301,6 @@ public class AdminMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle click event of the tick button
                 // For example, you can mark the PDF as verified in the database
-//                markPdfAsVerified(pdfKey);
-                Log.d(null, "onClick: PDf check button clicked");
                 databaseReference.child(pdfKey).child("verified").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -262,6 +319,7 @@ public class AdminMainActivity extends AppCompatActivity {
         // Add the custom layout to the main layout
         mainLayout.addView(dynamicLayout);
     }
+
 
 
     private int getNavigationBarHeight() {
