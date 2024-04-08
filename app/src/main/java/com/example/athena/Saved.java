@@ -188,6 +188,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -205,6 +206,7 @@ public class Saved extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +231,7 @@ public class Saved extends AppCompatActivity {
         Button newButton = findViewById(R.id.new_item);
         Button searchButton = findViewById(R.id.search);
         Button savedButton = findViewById(R.id.saved);
+        progressBar = findViewById(R.id.progressBar);
 
         // Apply navigation bar padding adjustment
         View buttonContainer = findViewById(R.id.buttonContainer);
@@ -268,6 +271,7 @@ public class Saved extends AppCompatActivity {
     }
 
     private void retrieveSavedPDFs(LinearLayout savedView) {
+        progressBar.setVisibility(View.VISIBLE);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -282,12 +286,14 @@ public class Saved extends AppCompatActivity {
                         String ID = pdfSnapshot.getKey(); // Get the ID of the PDF
                         createPDFButton(savedView, pdfTitle, pdfUrl, pdfTitleFull, saved, ID, pdfTags);
                     }
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle error
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

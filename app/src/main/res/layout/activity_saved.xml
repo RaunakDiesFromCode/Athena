@@ -72,6 +72,15 @@
                 android:textSize="30dp"
                 android:layout_margin="0dp" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="150dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminateTint="@color/violet"/>
+
             <!-- Dynamic Buttons will be added here -->
         </LinearLayout>
     </ScrollView>
