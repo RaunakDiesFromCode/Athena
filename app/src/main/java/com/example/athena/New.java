@@ -83,7 +83,8 @@ public class New extends AppCompatActivity {
         uploadPdfBtn.setOnClickListener(v -> {
             String pdfTags = tags.getText().toString();
             if (pdfTags.isEmpty()) {
-                tags.setError("Tags cannot be empty");
+//                tags.setError("");
+                Toast.makeText(this, "Tags cannot be empty", Toast.LENGTH_SHORT).show();
                 tags.requestFocus();
             } else if (pdfData == null) {
                 Toast.makeText(New.this, "Where's the PDF?", Toast.LENGTH_SHORT).show();
