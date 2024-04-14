@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -204,6 +206,8 @@ public class Login extends AppCompatActivity {
     ProgressBar progressBar;
     TextView textView;
     DatabaseReference adminRef;
+    private EditText passwordEditText;
+    private Button peekPasswordButton;
 
     @Override
     public void onStart() {
@@ -238,6 +242,29 @@ public class Login extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Register.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        passwordEditText = findViewById(R.id.password);
+        peekPasswordButton = findViewById(R.id.peekPasswordButton);
+
+        // Set onClickListener to toggle password visibility
+        peekPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Toggle password visibility
+                if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    // If password is visible, hide it
+                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    peekPasswordButton.setText("Show"); // Change button text to "Show"
+                } else {
+                    // If password is hidden, show it
+                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    peekPasswordButton.setText("Hide"); // Change button text to "Hide"
+                }
+
+                // Move cursor to the end of the password EditText
+                passwordEditText.setSelection(passwordEditText.getText().length());
             }
         });
 

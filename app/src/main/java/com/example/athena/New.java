@@ -48,6 +48,7 @@ public class New extends AppCompatActivity {
     private ProgressBar progressBarCircular;
 
     private String userEmail;
+    EditText tags;
 
     String pdfNameFull;
 
@@ -64,7 +65,7 @@ public class New extends AppCompatActivity {
         setContentView(R.layout.activity_new);
 
         Button uploadPdfBtn = findViewById(R.id.uploadPdfBtn);
-        EditText tags = findViewById(R.id.tags);
+        tags = findViewById(R.id.tags);
         btSelect = findViewById(R.id.searchTxt);
         Button newButton = findViewById(R.id.new_item);
         Button searchButton = findViewById(R.id.search);
@@ -138,21 +139,85 @@ public class New extends AppCompatActivity {
         });
     }
 
-    private void uploadPdf() {
-        progressBarCircular.setVisibility(View.VISIBLE);
-        pdfNameFull = pdfName + "-" + System.currentTimeMillis();
-        StorageReference reference = storageReference.child("pdf/" +pdfNameFull + ".pdf");
-        reference.putFile(pdfData).addOnSuccessListener(taskSnapshot -> {
-            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-            uriTask.addOnSuccessListener(uri -> {
-                progressBarCircular.setVisibility(View.GONE);
-                uploadData(uri.toString());
-            });
-        }).addOnFailureListener(e -> {
-            progressBarCircular.setVisibility(View.GONE);
-            Toast.makeText(New.this, "Something's wrong there...", Toast.LENGTH_SHORT).show();
-        });
+    //    private void uploadPdf() {
+//        progressBarCircular.setVisibility(View.VISIBLE);
+//        pdfNameFull = pdfName + "-" + System.currentTimeMillis();
+//        StorageReference reference = storageReference.child("pdf/" +pdfNameFull + ".pdf");
+//        reference.putFile(pdfData).addOnSuccessListener(taskSnapshot -> {
+//            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+//            uriTask.addOnSuccessListener(uri -> {
+//                progressBarCircular.setVisibility(View.GONE);
+//                uploadData(uri.toString());
+//            });
+//        }).addOnFailureListener(e -> {
+//            progressBarCircular.setVisibility(View.GONE);
+//            Toast.makeText(New.this, "Something's wrong there...", Toast.LENGTH_SHORT).show();
+//        });
+//    }
+    public static String removeSuffix(String input) {
+        int index = input.indexOf(".pdf");
+        if (index != -1) {
+            return input.substring(0, index + 4); // Add 4 to include ".pdf"
+        } else {
+            return input; // ".pdf" not found, return original string
+        }
     }
+
+    private void uploadPdf() {
+        String pdfTags = tags.getText().toString();
+//        if (pdfTags.isEmpty()) {
+//            Toast.makeText(this, "Tags cannot be empty", Toast.LENGTH_SHORT).show();
+//            tags.requestFocus();
+//            return;
+//        }
+
+        Log.d(null, "uploadPdf: in uploadPdf()");
+
+        // Check if the uploaded PDF exists in the "rejected" node
+        databaseReference.child("rejected").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(null, "uploadPdf: inside onDataChange()");
+                boolean pdfExistsInRejected = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String rejectedPdfTitle = (snapshot.child("pdfTitle").getValue(String.class));
+                    String rejectedPdfTags = snapshot.child("pdfTag").getValue(String.class);
+                    Log.d(null, "onDataChange: pdfTitle "+ rejectedPdfTitle + " Tags "+ rejectedPdfTags);
+                    if (rejectedPdfTitle != null && rejectedPdfTags != null &&
+                            rejectedPdfTitle.equals(removeSuffix(pdfName)) && rejectedPdfTags.equals(pdfTags)) {
+                        pdfExistsInRejected = true;
+                        break;
+                    }
+                }
+                if (pdfExistsInRejected) {
+                    // PDF with matching title and tags exists in the "rejected" node
+                    Toast.makeText(New.this, "This PDF has been already been rejected", Toast.LENGTH_SHORT).show();
+                } else {
+                    // PDF is not in the "rejected" node, proceed with upload
+                    progressBarCircular.setVisibility(View.VISIBLE);
+                    pdfNameFull = pdfName + "-" + System.currentTimeMillis();
+                    StorageReference reference = storageReference.child("pdf/" + pdfNameFull + ".pdf");
+                    reference.putFile(pdfData).addOnSuccessListener(taskSnapshot -> {
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        uriTask.addOnSuccessListener(uri -> {
+                            progressBarCircular.setVisibility(View.GONE);
+                            uploadData(uri.toString());
+                        });
+                    }).addOnFailureListener(e -> {
+                        progressBarCircular.setVisibility(View.GONE);
+                        Toast.makeText(New.this, "Something's wrong there...", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle onCancelled
+            }
+        });
+
+    }
+
 
     private void uploadData(String downloadUrl) {
         EditText tags = findViewById(R.id.tags);
@@ -162,11 +227,10 @@ public class New extends AppCompatActivity {
             // Get the user's emails
             userEmail = currentUser.getEmail();
         }
-        Log.d(null, "uploadData: uploader = "+userEmail);
+        Log.d(null, "uploadData: uploader = " + userEmail);
         String uniqueKey = databaseReference.child("pdf").push().getKey();
 
         HashMap<String, Object> data = new HashMap<>();
-
 
 
         data.put("uploader", userEmail);
@@ -177,7 +241,7 @@ public class New extends AppCompatActivity {
         data.put("verified", false);
         data.put("saved", "");
 
-        Log.d(null, "uploadData: uploader: "+userEmail);
+        Log.d(null, "uploadData: uploader: " + userEmail);
 
         databaseReference.child("pdf").child(uniqueKey).setValue(data)
                 .addOnSuccessListener(aVoid -> Toast.makeText(New.this, "Yay!! Your notes are uploaded", Toast.LENGTH_SHORT).show())

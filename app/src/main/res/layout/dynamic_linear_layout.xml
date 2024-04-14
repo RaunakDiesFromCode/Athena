@@ -9,31 +9,43 @@
     android:padding="10dp">
 
     <Button
+        android:id="@+id/tickButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="accept"
+        android:padding="14dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/violet"
+        android:fontFamily="@font/futura"/>
+
+    <Button
         android:id="@+id/nameButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginRight="5dp"
         android:textSize="20dp"
         android:text="Pdf Names are shown here "
         android:textStyle="bold"
-        android:padding="10dp"
-        android:background="@drawable/search_box_admin"
+        android:padding="15dp"
         android:textColor="@color/white"
         android:fontFamily="@font/futura"
+        android:backgroundTint="@color/violet"
         android:singleLine="true"/>
 
     <Button
-        android:id="@+id/tickButton"
+        android:id="@+id/rejectButton"
+        android:text="reject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:textStyle="bold"
-        android:text="Check"
         android:textSize="20dp"
-        android:padding="10dp"
+        android:padding="15dp"
         android:textColor="@color/white"
-        android:background="@drawable/search_icon_admin"
+        android:backgroundTint="@color/violet"
         android:fontFamily="@font/futura"/>
 
 </LinearLayout>

@@ -57,6 +57,7 @@ public class AdminPdfPreview extends AppCompatActivity {
     private PdfPagerAdapter adapter;
     private ProgressBar progressBar;
     private Button saveButton;
+    private Button downloadButton;
 
     private BroadcastReceiver onCompleteReceiver;
 
@@ -105,11 +106,12 @@ public class AdminPdfPreview extends AppCompatActivity {
 //            uploader = currentUser.getEmail();
 //        }
 
-
         Log.d(null, "onCreate: Uploader " + uploader);
 
         saveButton = findViewById(R.id.saveButton);
+        downloadButton = findViewById(R.id.downloadButton);
         saveButton.setVisibility(View.GONE);
+//        downloadButton.setVisibility(View.GONE);
 
         // Set text for TextViews
         TextView pdfNameTextView = findViewById(R.id.pdfNameTextView);
@@ -281,27 +283,10 @@ public class AdminPdfPreview extends AppCompatActivity {
         if (onCompleteReceiver != null) {
             unregisterReceiver(onCompleteReceiver);
         }
-        cancelDownloadAndCleanup();
+//        cancelDownloadAndCleanup();
     }
 
-    @Override
-    public void onBackPressed() {
-        // Cancel ongoing tasks and cleanup resources
-        cancelDownloadAndCleanup();
-        super.onBackPressed();
-    }
 
     // Method to cancel ongoing tasks and cleanup resources
-    private void cancelDownloadAndCleanup() {
-        if (tempFile != null) {
-            // Delete the temporary PDF file if it exists
-            if (tempFile.exists()) {
-                tempFile.delete();
-            }
-        }
-        // Close PdfRenderer if it is open
-        if (pdfRenderer != null) {
-            pdfRenderer.close();
-        }
-    }
+
 }
